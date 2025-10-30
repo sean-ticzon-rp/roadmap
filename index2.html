@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineering Levels</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .font-tech {
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #0ca5ec;
+            border-radius: 6px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0891d1;
+        }
+        
+        /* White Grid Background */
+        .grid-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(255, 255, 255, 0.03) 79px, rgba(255, 255, 255, 0.03) 80px),
+                repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(255, 255, 255, 0.03) 79px, rgba(255, 255, 255, 0.03) 80px);
+            animation: gridScroll 20s linear infinite;
+        }
+        
+        @keyframes gridScroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(80px); }
+        }
+        
+        /* Glitch Animation for Text */
+        .glitch {
+            position: relative;
+            animation: glitch-main 3s infinite;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            animation: glitch-1 2.5s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            transform: translate(-2px, -2px);
+            opacity: 0.8;
+            color: #0ca5ec;
+        }
+        
+        .glitch::after {
+            animation: glitch-2 2.5s infinite;
+            clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+            transform: translate(2px, 2px);
+            opacity: 0.8;
+            color: #ffffff;
+        }
+        
+        @keyframes glitch-main {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        @keyframes glitch-1 {
+            0%, 100% { transform: translate(0); }
+            33% { transform: translate(-3px, 0); }
+            66% { transform: translate(3px, 0); }
+        }
+        
+        @keyframes glitch-2 {
+            0%, 100% { transform: translate(0); }
+            33% { transform: translate(3px, 0); }
+            66% { transform: translate(-3px, 0); }
+        }
+        
+        /* Neon Glow Effect */
+        .neon-glow {
+            text-shadow: 
+                0 0 10px #0ca5ec,
+                0 0 20px #0ca5ec,
+                0 0 30px #0ca5ec,
+                0 0 40px #0ca5ec;
+        }
+        
+        .neon-border {
+            border: 2px solid #0ca5ec;
+            box-shadow: 
+                0 0 10px #0ca5ec,
+                0 0 20px rgba(12, 165, 236, 0.5),
+                inset 0 0 10px rgba(12, 165, 236, 0.2);
+        }
+        
+        /* Card Styles */
+        .tech-card {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid rgba(12, 165, 236, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(12, 165, 236, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tech-card:hover::before {
+            left: 100%;
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-10px);
+            border-color: #0ca5ec;
+            box-shadow: 
+                0 0 20px rgba(12, 165, 236, 0.3),
+                0 20px 60px rgba(12, 165, 236, 0.2);
+        }
+        
+        /* Level Badge */
+        .level-badge {
+            background: #0ca5ec;
+            box-shadow: 
+                0 0 20px #0ca5ec,
+                0 0 40px rgba(12, 165, 236, 0.5),
+                0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .level-badge::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: #0ca5ec;
+            border-radius: inherit;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.7;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .level-badge:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 
+                0 0 30px #0ca5ec,
+                0 0 60px rgba(12, 165, 236, 0.8);
+        }
+        
+        /* Code Block */
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid rgba(12, 165, 236, 0.2);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ca5ec, transparent);
+            animation: scan 3s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 2px solid;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .status-badge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px currentColor;
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-anim {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Section Divider */
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ca5ec, transparent);
+            margin: 60px 0;
+        }
+        
+        /* Technique Cards */
+        .technique-card {
+            background: rgba(12, 165, 236, 0.05);
+            border: 1px solid rgba(12, 165, 236, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .technique-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 0;
+            background: #0ca5ec;
+            transition: height 0.3s ease;
+        }
+        
+        .technique-card:hover::after {
+            height: 100%;
+        }
+        
+        .technique-card:hover {
+            background: rgba(12, 165, 236, 0.1);
+            border-color: #0ca5ec;
+            transform: translateX(10px);
+        }
+        
+        /* Table Styles */
+        .tech-table tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tech-table tr:hover {
+            background: rgba(12, 165, 236, 0.1);
+            transform: translateX(10px);
+            border-color: #0ca5ec;
+        }
+        
+        /* Icon Glow */
+        .icon-glow {
+            background: #0ca5ec;
+            box-shadow: 0 0 20px rgba(12, 165, 236, 0.6);
+            animation: icon-pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes icon-pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(12, 165, 236, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(12, 165, 236, 1);
+            }
+        }
+        
+        /* Scan Line Effect */
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ca5ec, transparent);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.3;
+        }
+        
+        /* Text Flicker */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            41.99% { opacity: 1; }
+            42% { opacity: 0.8; }
+            43% { opacity: 1; }
+            45.99% { opacity: 1; }
+            46% { opacity: 0.8; }
+            46.5% { opacity: 1; }
+        }
+        
+        .flicker {
+            animation: flicker 5s linear infinite;
+        }
+        
+        /* Corner Accents */
+        .corner-accent {
+            position: relative;
+        }
+        
+        .corner-accent::before,
+        .corner-accent::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #0ca5ec;
+        }
+        
+        .corner-accent::before {
+            top: -1px;
+            left: -1px;
+            border-right: none;
+            border-bottom: none;
+        }
+        
+        .corner-accent::after {
+            bottom: -1px;
+            right: -1px;
+            border-left: none;
+            border-top: none;
+        }
+        
+        /* Particle Background */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0ca5ec',
+                        dark: '#0a0a0a',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-black">
+    
+    <!-- Scanline Effect -->
+    <div class="scanline"></div>
+    
+    <!-- Grid Background -->
+    <div class="grid-container">
+        <div class="grid-lines"></div>
+    </div>
+    
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+    
+    <div class="relative z-10">
+        
+        <!-- Hero Header -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 md:py-32">
+            <div class="text-center" data-aos="fade-down" data-aos-duration="1200">
+                <h1 class="text-6xl md:text-8xl font-black mb-8 tracking-wider">
+                    <span class="block text-white glitch flicker" data-text="PROMPT ENGINEERING">PROMPT ENGINEERING</span>
+                    <span class="block text-primary neon-glow mt-4" style="font-size: 0.7em;">FOR JAVA DEVELOPERS</span>
+                </h1>
+                <div class="h-1 w-32 bg-primary mx-auto" style="box-shadow: 0 0 10px #0ca5ec;"></div>
+            </div>
+        </div>
+
+        <!-- Intro Cards -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-32">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <div class="tech-card rounded-none p-10 corner-accent" data-aos="fade-up" data-aos-delay="0">
+                    <div class="w-20 h-20 icon-glow rounded-none flex items-center justify-center mb-8 float-anim">
+                        <svg class="w-10 h-10 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
+                            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white mb-4 font-tech">WHAT IS IT?</h3>
+                    <p class="text-gray-400 text-lg leading-relaxed">Carefully designing prompts/instructions to get better AI outputs. Like giving clear instructions to a teammate.</p>
+                </div>
+
+                <div class="tech-card rounded-none p-10 corner-accent" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-20 h-20 icon-glow rounded-none flex items-center justify-center mb-8 float-anim" style="animation-delay: 0.5s;">
+                        <svg class="w-10 h-10 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white mb-4 font-tech">WHY USE IT?</h3>
+                    <ul class="space-y-4 text-gray-400 text-lg">
+                        <li class="flex items-start">
+                            <span class="text-primary mr-3 text-2xl font-bold">→</span>
+                            <span>Prevents hallucinations & bad outputs</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-3 text-2xl font-bold">→</span>
+                            <span>Saves money (Claude has usage limits)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-3 text-2xl font-bold">→</span>
+                            <span>Saves time (right answer first try)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tech-card rounded-none p-10 corner-accent" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-20 h-20 icon-glow rounded-none flex items-center justify-center mb-8 float-anim" style="animation-delay: 1s;">
+                        <svg class="w-10 h-10 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white mb-4 font-tech">WHERE TO USE IT?</h3>
+                    <ul class="space-y-4 text-gray-400 text-lg">
+                        <li class="flex items-start">
+                            <span class="text-primary mr-3 text-2xl font-bold">→</span>
+                            <span>Writing code that follows your style</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-3 text-2xl font-bold">→</span>
+                            <span>Working with client constraints</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-primary mr-3 text-2xl font-bold">→</span>
+                            <span>PR descriptions & documentation</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Main Title -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
+            <div class="text-center" data-aos="zoom-in">
+                <h2 class="text-5xl md:text-7xl font-black text-white mb-6 tracking-wider glitch" data-text="THE 5 LEVELS OF PROMPTING">
+                    THE 5 LEVELS OF PROMPTING
+                </h2>
+                <p class="text-2xl text-gray-400 font-tech">PROGRESSIVE APPROACH TO WRITING BETTER PROMPTS</p>
+            </div>
+        </div>
+
+        <!-- Level 1 -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-2" data-aos="fade-right">
+                    <div class="w-28 h-28 level-badge rounded-none flex items-center justify-center text-6xl font-black text-black sticky top-8">
+                        1
+                    </div>
+                </div>
+                <div class="lg:col-span-10 tech-card rounded-none p-12 corner-accent" data-aos="fade-left">
+                    <h3 class="text-5xl font-black text-white mb-6 font-tech" data-aos="fade-up">NOT EVEN TRYING</h3>
+                    <p class="text-gray-400 text-xl mb-10" data-aos="fade-up" data-aos-delay="50">Just asking without any context or guidance.</p>
+
+                    <div class="code-block rounded-none p-8 mb-10 text-base text-gray-300" data-aos="fade-up" data-aos-delay="100">
+                        <code>Write me a PR message for "emulator display id and descriptions for item lists under promos tab"</code>
+                    </div>
+
+                    <div class="bg-red-950/30 border-l-4 border-red-500 rounded-none p-8 mb-10" data-aos="fade-up" data-aos-delay="150">
+                        <h4 class="text-red-400 font-bold text-2xl mb-6 font-tech">WHAT'S MISSING:</h4>
+                        <ul class="space-y-4 text-red-300 text-lg">
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl">✗</span>
+                                <span>No code context</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl">✗</span>
+                                <span>No format guidance</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl">✗</span>
+                                <span>No understanding of changes</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex items-center gap-4" data-aos="fade-up" data-aos-delay="200">
+                        <span class="text-white font-bold text-xl font-tech">RESULT:</span>
+                        <span class="status-badge bg-red-950 border-red-500 text-red-400">GENERIC GARBAGE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 2 -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-2" data-aos="fade-right">
+                    <div class="w-28 h-28 level-badge rounded-none flex items-center justify-center text-6xl font-black text-black sticky top-8">
+                        2
+                    </div>
+                </div>
+                <div class="lg:col-span-10 tech-card rounded-none p-12 corner-accent" data-aos="fade-left">
+                    <h3 class="text-5xl font-black text-white mb-6 font-tech" data-aos="fade-up">ADD CONTEXT</h3>
+                    <p class="text-gray-400 text-xl mb-10" data-aos="fade-up" data-aos-delay="50">Attach your actual files so AI knows what changed.</p>
+
+                    <div class="code-block rounded-none p-8 mb-10 text-base text-gray-300" data-aos="fade-up" data-aos-delay="100">
+                        <code>Write me a PR message for "emulator display id and descriptions for item lists under promos tab"
+
+<span class="text-gray-600">[Attached files:]</span>
+- PromoService.ts
+- PromoListComponent.html
+- PromoListComponent.ts</code>
+                    </div>
+
+                    <div class="bg-emerald-950/30 border-l-4 border-emerald-500 rounded-none p-8 mb-10" data-aos="fade-up" data-aos-delay="150">
+                        <h4 class="text-emerald-400 font-bold text-2xl mb-6 font-tech">WHAT IMPROVED:</h4>
+                        <ul class="space-y-4 text-emerald-300 text-lg">
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>AI can see actual code changes</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>More specific, relevant output</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-red-950/30 border-l-4 border-red-500 rounded-none p-8 mb-10" data-aos="fade-up" data-aos-delay="200">
+                        <h4 class="text-red-400 font-bold text-2xl mb-6 font-tech">STILL MISSING:</h4>
+                        <ul class="space-y-4 text-red-300 text-lg">
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl">✗</span>
+                                <span>Format/structure guidance</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl">✗</span>
+                                <span>Company PR standards</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl">✗</span>
+                                <span>Length limits</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex items-center gap-4" data-aos="fade-up" data-aos-delay="250">
+                        <span class="text-white font-bold text-xl font-tech">RESULT:</span>
+                        <span class="status-badge bg-amber-950 border-amber-500 text-amber-400">NEEDS EDITING</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 3 -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-2" data-aos="fade-right">
+                    <div class="w-28 h-28 level-badge rounded-none flex items-center justify-center text-6xl font-black text-black sticky top-8">
+                        3
+                    </div>
+                </div>
+                <div class="lg:col-span-10 tech-card rounded-none p-12 corner-accent" data-aos="fade-left">
+                    <h3 class="text-5xl font-black text-white mb-6 font-tech" data-aos="fade-up">ADD INSTRUCTIONS & GUARDRAILS</h3>
+                    <p class="text-gray-400 text-xl mb-10" data-aos="fade-up" data-aos-delay="50">Tell Claude what to do AND what NOT to do.</p>
+
+                    <div class="code-block rounded-none p-8 mb-10 text-base text-gray-300 max-h-96 overflow-y-auto" data-aos="fade-up" data-aos-delay="100">
+                        <code>Write me a PR message for "emulator display id and descriptions for item lists under promos tab"
+
+<span class="text-gray-600">[Attached files:]</span>
+- PromoService.ts
+- PromoListComponent.html
+- PromoListComponent.ts
+
+<span class="text-gray-600">// Instructions (what to DO)</span>
+- Keep under 200 words
+- Include: issue resolved, changes made, validation steps
+- Use bullet points
+- Technical tone
+
+<span class="text-gray-600">// Guardrails (what NOT to do)</span>
+- NO emojis
+- Don't speculate about code not shown
+- Don't suggest improvements (just describe changes)</code>
+                    </div>
+
+                    <div class="bg-emerald-950/30 border-l-4 border-emerald-500 rounded-none p-8 mb-10" data-aos="fade-up" data-aos-delay="150">
+                        <h4 class="text-emerald-400 font-bold text-2xl mb-6 font-tech">WHAT IMPROVED:</h4>
+                        <ul class="space-y-4 text-emerald-300 text-lg">
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Specific format requirements enforced</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Company standards applied</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Consistent structure every time</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                        <div class="technique-card rounded-none p-8" data-aos="zoom-in" data-aos-delay="200">
+                            <h5 class="text-primary font-bold text-xl mb-4 font-tech">BE EXPLICIT</h5>
+                            <p class="text-gray-400 text-base">Clear, direct instructions get better results</p>
+                        </div>
+                        <div class="technique-card rounded-none p-8" data-aos="zoom-in" data-aos-delay="250">
+                            <h5 class="text-primary font-bold text-xl mb-4 font-tech">ADD GUARDRAILS</h5>
+                            <p class="text-gray-400 text-base">Tell it what NOT to do (no emojis, no speculation)</p>
+                        </div>
+                        <div class="technique-card rounded-none p-8" data-aos="zoom-in" data-aos-delay="300">
+                            <h5 class="text-primary font-bold text-xl mb-4 font-tech">GIVE CONTEXT</h5>
+                            <p class="text-gray-400 text-base">Explain what the output is for and who reads it</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4" data-aos="fade-up" data-aos-delay="350">
+                        <span class="text-white font-bold text-xl font-tech">RESULT:</span>
+                        <span class="status-badge bg-emerald-950 border-emerald-500 text-emerald-400">DECENT, USABLE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 4 -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-2" data-aos="fade-right">
+                    <div class="w-28 h-28 level-badge rounded-none flex items-center justify-center text-6xl font-black text-black sticky top-8">
+                        4
+                    </div>
+                </div>
+                <div class="lg:col-span-10 tech-card rounded-none p-12 corner-accent" data-aos="fade-left">
+                    <h3 class="text-5xl font-black text-white mb-6 font-tech" data-aos="fade-up">ADD EXAMPLES (FEW-SHOT)</h3>
+                    <p class="text-gray-400 text-xl mb-10" data-aos="fade-up" data-aos-delay="50">Show Claude 3-5 examples of what you want. More examples = better performance.</p>
+
+                    <div class="code-block rounded-none p-8 mb-10 text-base text-gray-300 max-h-96 overflow-y-auto" data-aos="fade-up" data-aos-delay="100">
+                        <code>Write me a PR message for "emulator display id and descriptions for item lists under promos tab"
+
+[Attached files and instructions same as Level 3]
+
+<span class="text-gray-600">// Example 1</span>
+<span class="text-white">**Issue:**</span> NullPointerException in RefundService
+<span class="text-white">**Changes Made:**</span>
+- Added null check before accessing discount.code
+- Updated error handling
+<span class="text-white">**Validation:**</span>
+- Added unit test: testRefundWithNullDiscount()
+- Tested 5 refunds in staging
+
+<span class="text-gray-600">// Example 2</span>
+<span class="text-white">**Issue:**</span> Timeout in PaymentProcessor
+<span class="text-white">**Changes Made:**</span>
+- Increased timeout from 3s to 10s
+- Added connection pooling
+<span class="text-white">**Validation:**</span>
+- Load tested 500 concurrent requests
+- Zero timeouts observed
+
+<span class="text-gray-600">// Example 3</span>
+<span class="text-white">**Issue:**</span> Incorrect tax calculation
+<span class="text-white">**Changes Made:**</span>
+- Fixed tax calculation for multiple addresses
+- Updated to use destination address
+<span class="text-white">**Validation:**</span>
+- Added integration test
+- Verified 10 historical orders</code>
+                    </div>
+
+                    <div class="bg-emerald-950/30 border-l-4 border-emerald-500 rounded-none p-8 mb-10" data-aos="fade-up" data-aos-delay="150">
+                        <h4 class="text-emerald-400 font-bold text-2xl mb-6 font-tech">WHAT IMPROVED:</h4>
+                        <ul class="space-y-4 text-emerald-300 text-lg">
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Shows AI exactly what "good" looks like</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Learns your team's specific style</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Consistent format across all PRs</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="neon-border rounded-none p-10 mb-10 bg-primary/5" data-aos="fade-up" data-aos-delay="200">
+                        <p class="text-white text-xl font-tech"><span class="font-bold text-primary text-2xl">FEW-SHOT PROMPTING:</span> Include 3-5 diverse examples. Claude learns patterns from examples better than from instructions alone.</p>
+                    </div>
+
+                    <div class="flex items-center gap-4" data-aos="fade-up" data-aos-delay="250">
+                        <span class="text-white font-bold text-xl font-tech">RESULT:</span>
+                        <span class="status-badge bg-primary/20 border-primary text-primary">GOOD STYLE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 5 -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-2" data-aos="fade-right">
+                    <div class="w-28 h-28 level-badge rounded-none flex items-center justify-center text-6xl font-black text-black sticky top-8">
+                        5
+                    </div>
+                </div>
+                <div class="lg:col-span-10 tech-card rounded-none p-12 corner-accent" data-aos="fade-left">
+                    <h3 class="text-5xl font-black text-white mb-6 font-tech" data-aos="fade-up">XML TAGS FOR STRUCTURE</h3>
+                    <p class="text-gray-400 text-xl mb-10" data-aos="fade-up" data-aos-delay="50">Use XML tags to organize complex prompts. Claude was trained specifically to recognize XML tags.</p>
+
+                    <div class="code-block rounded-none p-8 mb-10 text-base text-gray-300 max-h-96 overflow-y-auto" data-aos="fade-up" data-aos-delay="100">
+                        <code>Write me a PR message
+
+<span class="text-primary">&lt;files_changed&gt;</span>
+- PromoService.ts
+- PromoListComponent.html
+- PromoListComponent.ts
+<span class="text-primary">&lt;/files_changed&gt;</span>
+
+<span class="text-primary">&lt;instructions&gt;</span>
+- Keep under 200 words
+- Include: issue, changes, validation
+- Use bullet points, technical tone
+- NO emojis, don't speculate
+<span class="text-primary">&lt;/instructions&gt;</span>
+
+<span class="text-primary">&lt;examples&gt;</span>
+<span class="text-primary">&lt;example_1&gt;</span>
+<span class="text-white">**Issue:**</span> NullPointerException in RefundService
+<span class="text-white">**Changes:**</span> Added null check...
+<span class="text-white">**Validation:**</span> Unit test added...
+<span class="text-primary">&lt;/example_1&gt;</span>
+
+<span class="text-primary">&lt;example_2&gt;</span>
+[More examples...]
+<span class="text-primary">&lt;/example_2&gt;</span>
+<span class="text-primary">&lt;/examples&gt;</span>
+
+<span class="text-primary">&lt;your_task&gt;</span>
+Write PR for the code changes above
+<span class="text-primary">&lt;/your_task&gt;</span></code>
+                    </div>
+
+                    <div class="bg-emerald-950/30 border-l-4 border-emerald-500 rounded-none p-8 mb-10" data-aos="fade-up" data-aos-delay="150">
+                        <h4 class="text-emerald-400 font-bold text-2xl mb-6 font-tech">WHAT IMPROVED:</h4>
+                        <ul class="space-y-4 text-emerald-300 text-lg">
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Crystal clear structure - no confusion</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Claude won't mix examples with instructions</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>Easy for humans to scan and modify</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="mr-4 text-2xl font-bold">✓</span>
+                                <span>30% accuracy improvement (Anthropic data)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                        <div class="technique-card rounded-none p-6" data-aos="zoom-in" data-aos-delay="200">
+                            <h5 class="text-primary font-bold text-lg mb-3 font-tech">WHY XML?</h5>
+                            <p class="text-gray-400 text-sm">Claude was specifically trained to recognize XML tags as prompt structure</p>
+                        </div>
+                        <div class="technique-card rounded-none p-6" data-aos="zoom-in" data-aos-delay="250">
+                            <h5 class="text-primary font-bold text-lg mb-3 font-tech">BETTER PARSING</h5>
+                            <p class="text-gray-400 text-sm">Prevents mixing up different parts of your prompt</p>
+                        </div>
+                        <div class="technique-card rounded-none p-6" data-aos="zoom-in" data-aos-delay="300">
+                            <h5 class="text-primary font-bold text-lg mb-3 font-tech">HUMAN-READABLE</h5>
+                            <p class="text-gray-400 text-sm">Both you and AI understand the structure clearly</p>
+                        </div>
+                        <div class="technique-card rounded-none p-6" data-aos="zoom-in" data-aos-delay="350">
+                            <h5 class="text-primary font-bold text-lg mb-3 font-tech">ROLE PROMPTING</h5>
+                            <p class="text-gray-400 text-sm">Add &lt;role&gt; tags to adjust Claude's style and expertise</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4" data-aos="fade-up" data-aos-delay="400">
+                        <span class="text-white font-bold text-xl font-tech">RESULT:</span>
+                        <span class="status-badge bg-primary/20 border-primary text-primary">PRODUCTION READY</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Comparison Table -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
+            <h2 class="text-6xl font-black text-center text-white mb-20 font-tech glitch" data-text="LEVEL COMPARISON" data-aos="fade-up">LEVEL COMPARISON</h2>
+            <div class="tech-card rounded-none overflow-hidden corner-accent" data-aos="fade-up" data-aos-delay="100">
+                <div class="overflow-x-auto">
+                    <table class="w-full tech-table">
+                        <thead>
+                            <tr class="bg-primary/10 border-b-2 border-primary">
+                                <th class="text-left p-8 text-white font-bold text-xl font-tech">LEVEL</th>
+                                <th class="text-left p-8 text-white font-bold text-xl font-tech">TIME TO WRITE</th>
+                                <th class="text-left p-8 text-white font-bold text-xl font-tech">OUTPUT QUALITY</th>
+                                <th class="text-left p-8 text-white font-bold text-xl font-tech">WHEN TO USE</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400 text-lg">
+                            <tr>
+                                <td class="p-8"><span class="font-bold text-white font-tech">LEVEL 1</span></td>
+                                <td class="p-8">10 seconds</td>
+                                <td class="p-8"><span class="status-badge bg-red-950 border-red-500 text-red-400">USELESS</span></td>
+                                <td class="p-8">Never (waste of time)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-8"><span class="font-bold text-white font-tech">LEVEL 2</span></td>
+                                <td class="p-8">30 seconds</td>
+                                <td class="p-8"><span class="status-badge bg-amber-950 border-amber-500 text-amber-400">NEEDS EDITING</span></td>
+                                <td class="p-8">Quick code questions</td>
+                            </tr>
+                            <tr>
+                                <td class="p-8"><span class="font-bold text-white font-tech">LEVEL 3</span></td>
+                                <td class="p-8">2 minutes</td>
+                                <td class="p-8"><span class="status-badge bg-emerald-950 border-emerald-500 text-emerald-400">DECENT</span></td>
+                                <td class="p-8">Daily tasks, PR descriptions</td>
+                            </tr>
+                            <tr>
+                                <td class="p-8"><span class="font-bold text-white font-tech">LEVEL 4</span></td>
+                                <td class="p-8">5 minutes</td>
+                                <td class="p-8"><span class="status-badge bg-primary/20 border-primary text-primary">GOOD</span></td>
+                                <td class="p-8">Establishing patterns, team standards</td>
+                            </tr>
+                            <tr>
+                                <td class="p-8"><span class="font-bold text-white font-tech">LEVEL 5</span></td>
+                                <td class="p-8">5 minutes</td>
+                                <td class="p-8"><span class="status-badge bg-primary/20 border-primary text-primary">PRODUCTION READY</span></td>
+                                <td class="p-8">Complex prompts, automation, reusable templates</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-32">
+            <div class="neon-border rounded-none p-16 text-center corner-accent" data-aos="zoom-in">
+                <h2 class="text-5xl md:text-6xl font-black text-white mb-8 font-tech glitch" data-text="START TOMORROW WITH LEVEL 2-3">START TOMORROW WITH LEVEL 2-3</h2>
+                <p class="text-2xl text-gray-400 mb-16 max-w-4xl mx-auto">You don't need to master Level 5 right away. Start simple:</p>
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div class="tech-card rounded-none p-8 flex items-start gap-6 text-left" data-aos="fade-right" data-aos-delay="0">
+                        <span class="text-primary font-black text-3xl flex-shrink-0">→</span>
+                        <p class="text-gray-300 text-xl"><span class="font-bold text-white font-tech">LEVEL 2:</span> Always paste your actual code</p>
+                    </div>
+                    <div class="tech-card rounded-none p-8 flex items-start gap-6 text-left" data-aos="fade-right" data-aos-delay="100">
+                        <span class="text-primary font-black text-3xl flex-shrink-0">→</span>
+                        <p class="text-gray-300 text-xl"><span class="font-bold text-white font-tech">LEVEL 3:</span> Add "NO emojis" and "Don't speculate about code not shown"</p>
+                    </div>
+                    <div class="tech-card rounded-none p-8 flex items-start gap-6 text-left" data-aos="fade-right" data-aos-delay="200">
+                        <span class="text-primary font-black text-3xl flex-shrink-0">→</span>
+                        <p class="text-gray-300 text-xl"><span class="font-bold text-white font-tech">LEVEL 4:</span> Save 3 good PR examples to reuse</p>
+                    </div>
+                    <div class="tech-card rounded-none p-8 flex items-start gap-6 text-left" data-aos="fade-right" data-aos-delay="300">
+                        <span class="text-primary font-black text-3xl flex-shrink-0">→</span>
+                        <p class="text-gray-300 text-xl"><span class="font-bold text-white font-tech">LEVEL 5:</span> Use XML when prompts get complex</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 50,
+        });
+
+        // Particle Animation with Three.js
+        const canvas = document.getElementById('particle-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.position.z = 5;
+
+        // Create particles
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 10;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.015,
+            color: 0x0ca5ec,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            particlesMesh.rotation.y += 0.0005;
+            particlesMesh.rotation.x += 0.0002;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
